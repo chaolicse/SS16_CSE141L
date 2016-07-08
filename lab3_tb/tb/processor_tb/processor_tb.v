@@ -1,3 +1,14 @@
+/******************************************************************************
+ *
+ * Primitive MIPS processor test bench, driven by processor_tb.asm
+ *     Modify register file module's object name and register array name under
+ *     the second initial block if needed
+ *
+ *  Change Log:
+ *  07/08/2016 - Chao (Jack) Li - Initial Implementation
+ *
+ */
+
 `timescale 1ns/1ps
 
 module processor_tb();
@@ -8,20 +19,16 @@ module processor_tb();
    wire [7:0] serial_out;
    wire serial_wren;
 
-   // Generate clock at 10 MHz
    initial begin
    	clock <= 1'b0;
    	reset <= 1'b1;
    	forever #1 clock <= ~clock;
    end
 
-   // Drop reset after 5 ns
    always begin
    	#5 reset <= 1'b0;
    end
    	
-   	
-   // instantiate the processor  "DUT"
    processor dut(
    	.clock(clock),
    	.reset(reset),
@@ -80,6 +87,6 @@ module processor_tb();
 
       $stop;
 
-   end
+   end // end initial
 
 endmodule
