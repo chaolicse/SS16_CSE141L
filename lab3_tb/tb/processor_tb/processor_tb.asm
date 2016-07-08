@@ -1,3 +1,12 @@
+###############################################################################
+#
+# Primitive MIPS processor test bench
+#     Test the following instructions: addi, add, sub, and, or, xor, 
+#     nor, sw, lw 
+#
+#  Change Log:
+#  07/08/2016 - Chao (Jack) Li - Initial Implementation
+#
 
    .globl      __start
 
@@ -52,5 +61,5 @@ __start:
    add      $0, $0, $0        # nop
    add      $0, $0, $0        # nop
 
-   addi     $25, $0, 1        # indicate end of test for testbench 
+   addi     $25, $0, 1        # indicate end of test for processor_tb.v 
    
