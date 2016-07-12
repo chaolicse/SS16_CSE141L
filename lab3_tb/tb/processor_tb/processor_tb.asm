@@ -1,12 +1,11 @@
 ###############################################################################
 #
 # Primitive MIPS processor test bench
-#     Test the following instructions: addi, add, sub, and, or, xor, 
-#     nor, sw, lw 
 #
 #  Change Log:
-#  07/08/2016 - Chao (Jack) Li - Initial Implementation
+#  07/11/2016 - Chao (Jack) Li - Initial Implementation
 #
+
 
    .globl      __start
 

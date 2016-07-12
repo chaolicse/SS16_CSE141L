@@ -1,0 +1,99 @@
+08100021 // [0x00400000] j 0x00400084 [MAIN]             ; 27: j      MAIN
+00000000 // [0x00400004] nop                             ; 28: sll    $zero, $zero, 0
+23bdfff8 // [0x00400008] addi $29, $29, -8               ; 39: addi  $sp, $sp, -8         # room for $ra and one temporary
+afbf0004 // [0x0040000c] sw $31, 4($29)                  ; 40: sw    $ra, 4($sp)          # save $ra
+00041021 // [0x00400010] addu $2, $0, $4                 ; 41: addu  $v0, $zero, $a0      # pre-load return value as n
+20080002 // [0x00400014] addi $8, $0, 2                  ; 43: addi  $t0, $zero, 2
+0088402b // [0x00400018] sltu $8, $4, $8                 ; 44: sltu  $t0, $a0, $t0        # if(n < 2) return n
+1500000e // [0x0040001c] bne $8, $0, 56 [fib_rt-0x0040001c]; 45: bne   $t0, $0, fib_rt      #     blt
+00000000 // [0x00400020] nop                             ; 46: sll   $zero, $zero, 0
+afa40000 // [0x00400024] sw $4, 0($29)                   ; 48: sw    $a0, 0($sp)          # save a copy of n
+2084ffff // [0x00400028] addi $4, $4, -1                 ; 49: addi  $a0, $a0, -1         # n - 1
+0c100002 // [0x0040002c] jal 0x00400008 [fib]            ; 50: jal   fib                  # fib(n - 1)
+00000000 // [0x00400030] nop                             ; 51: sll   $zero, $zero, 0
+8fa40000 // [0x00400034] lw $4, 0($29)                   ; 53: lw    $a0, 0($sp)          # retrieve n
+00000000 // [0x00400038] nop                             ; 54: sll   $zero, $zero, 0
+afa20000 // [0x0040003c] sw $2, 0($29)                   ; 55: sw    $v0, 0($sp)          # save result of fib(n - 1)
+2084fffe // [0x00400040] addi $4, $4, -2                 ; 56: addi  $a0, $a0, -2         # n - 2
+0c100002 // [0x00400044] jal 0x00400008 [fib]            ; 57: jal   fib                  # fib(n - 2)
+00000000 // [0x00400048] nop                             ; 58: sll   $zero, $zero, 0
+8fa30000 // [0x0040004c] lw $3, 0($29)                   ; 60: lw    $v1, 0($sp)          # retrieve fib(n - 1)
+00000000 // [0x00400050] nop                             ; 61: sll   $zero, $zero, 0
+00431020 // [0x00400054] add $2, $2, $3                  ; 62: add   $v0, $v0, $v1        # fib(n - 1) + fib(n - 2)
+8fbf0004 // [0x00400058] lw $31, 4($29)                  ; 65: lw    $ra, 4($sp)          # restore $ra
+23bd0008 // [0x0040005c] addi $29, $29, 8                ; 66: addi  $sp, $sp, 8          # restore $sp
+03e00008 // [0x00400060] jr $31                          ; 67: jr    $ra                  # back to caller
+00000000 // [0x00400064] nop                             ; 68: sll   $zero, $zero, 0
+20020001 // [0x00400068] addi $2, $0, 1                  ; 77: addi     $v0, $zero, 1     # print_int     
+0000000c // [0x0040006c] syscall                         ; 78: syscall   
+20040020 // [0x00400070] addi $4, $0, 32                 ; 79: addi     $a0, $zero, 0x20  # ' '
+2002000b // [0x00400074] addi $2, $0, 11                 ; 80: addi     $v0, $zero, 11    # print_character
+0000000c // [0x00400078] syscall                         ; 81: syscall
+03e00008 // [0x0040007c] jr $31                          ; 82: jr       $ra
+00000000 // [0x00400080] nop                             ; 83: sll      $zero, $zero, 0
+20170001 // [0x00400084] addi $23, $0, 1                 ; 90: addi     $s7, $zero, 1        # test case := 1
+20040004 // [0x00400088] addi $4, $0, 4                  ; 91: addi     $a0, $zero, 4        # n = 4
+0c100002 // [0x0040008c] jal 0x00400008 [fib]            ; 92: jal      fib
+00000000 // [0x00400090] nop                             ; 93: sll      $zero, $zero, 0
+00024020 // [0x00400094] add $8, $0, $2                  ; 94: add      $t0, $zero, $v0
+20090003 // [0x00400098] addi $9, $0, 3                  ; 95: addi     $t1, $zero, 3        # expected result: fib(4) := 3
+15090034 // [0x0040009c] bne $8, $9, 208 [FAILED-0x0040009c]; 96: bne      $t0, $t1, FAILED
+20170002 // [0x004000a0] addi $23, $0, 2                 ; 108: addi     $s7, $zero, 2        # test case := 1
+20084000 // [0x004000a4] addi $8, $0, 16384              ; 117: addi     $t0, $zero, 0x4000
+00088022 // [0x004000a8] sub $16, $0, $8                 ; 118: sub      $s0, $zero, $t0
+02088022 // [0x004000ac] sub $16, $16, $8                ; 119: sub      $s0, $s0, $t0        # $s0 should now contain 0xffffc000
+02088022 // [0x004000b0] sub $16, $16, $8                ; 120: sub      $s0, $s0, $t0        # $s0 should now contain 0xffff8000
+02088022 // [0x004000b4] sub $16, $16, $8                ; 121: sub      $s0, $s0, $t0        # $s0 should now contain 0xffff0000
+20114000 // [0x004000b8] addi $17, $0, 16384             ; 123: addi     $s1, $zero, 0x4000   # 0x00004000
+02318820 // [0x004000bc] add $17, $17, $17               ; 124: add      $s1, $s1, $s1        # 0x00008000
+02318820 // [0x004000c0] add $17, $17, $17               ; 125: add      $s1, $s1, $s1        # 0x00010000
+02318820 // [0x004000c4] add $17, $17, $17               ; 126: add      $s1, $s1, $s1        # 0x00020000
+02318820 // [0x004000c8] add $17, $17, $17               ; 127: add      $s1, $s1, $s1        # 0x00040000
+02318820 // [0x004000cc] add $17, $17, $17               ; 128: add      $s1, $s1, $s1        # 0x00080000
+02318820 // [0x004000d0] add $17, $17, $17               ; 129: add      $s1, $s1, $s1        # 0x00100000
+02318820 // [0x004000d4] add $17, $17, $17               ; 130: add      $s1, $s1, $s1        # 0x00200000
+02318820 // [0x004000d8] add $17, $17, $17               ; 131: add      $s1, $s1, $s1        # 0x00400000
+02318820 // [0x004000dc] add $17, $17, $17               ; 132: add      $s1, $s1, $s1        # 0x00800000
+02318820 // [0x004000e0] add $17, $17, $17               ; 133: add      $s1, $s1, $s1        # 0x01000000
+02318820 // [0x004000e4] add $17, $17, $17               ; 134: add      $s1, $s1, $s1        # 0x02000000
+02318820 // [0x004000e8] add $17, $17, $17               ; 135: add      $s1, $s1, $s1        # 0x04000000
+02318820 // [0x004000ec] add $17, $17, $17               ; 136: add      $s1, $s1, $s1        # 0x08000000
+02318820 // [0x004000f0] add $17, $17, $17               ; 137: add      $s1, $s1, $s1        # 0x10000000
+08100043 // [0x004000f4] j 0x0040010c [SSL_NOT_IMPLEMENTED]; 139: j        SSL_NOT_IMPLEMENTED
+00000000 // [0x004000f8] nop                             ; 140: sll      $zero, $zero, 0
+3410ffff // [0x004000fc] ori $16, $0, -1                 ; 146: ori      $s0, $zero, 0xffff
+00108400 // [0x00400100] sll $16, $16, 16                ; 147: sll      $s0, $s0, 16
+34111000 // [0x00400104] ori $17, $0, 4096               ; 149: ori      $s1, $zero, 0x1000
+00118c00 // [0x00400108] sll $17, $17, 16                ; 150: sll      $s1, $s1, 16 
+20120000 // [0x0040010c] addi $18, $0, 0                 ; 156: addi     $s2, $zero, 0        # loop count
+2013000a // [0x00400110] addi $19, $0, 10                ; 157: addi     $s3, $zero, 10       # loop termination condition
+0011a020 // [0x00400114] add $20, $0, $17                ; 158: add      $s4, $zero, $s1      # write address
+00122020 // [0x00400118] add $4, $0, $18                 ; 160: add      $a0, $zero, $s2
+0c100002 // [0x0040011c] jal 0x00400008 [fib]            ; 161: jal      fib
+00000000 // [0x00400120] nop                             ; 162: sll      $zero, $zero, 0
+ae820000 // [0x00400124] sw $2, 0($20)                   ; 164: sw       $v0, 0($s4)          # save result
+22940004 // [0x00400128] addi $20, $20, 4                ; 165: addi     $s4, $s4, 4
+22520001 // [0x0040012c] addi $18, $18, 1                ; 173: addi     $s2, $s2, 1
+1653fff9 // [0x00400130] bne $18, $19, -28 [L1-0x00400130]; 174: bne      $s2, $s3, L1 
+00000000 // [0x00400134] nop                             ; 175: sll      $zero, $zero, 0
+20120000 // [0x00400138] addi $18, $0, 0                 ; 178: addi     $s2, $zero, 0        # loop count 
+0011a020 // [0x0040013c] add $20, $0, $17                ; 179: add      $s4, $zero, $s1      # load address 
+00004820 // [0x00400140] add $9, $0, $0                  ; 180: add      $t1, $zero, $zero    # sum register
+8e880000 // [0x00400144] lw $8, 0($20)                   ; 182: lw       $t0, 0($s4)          # load result
+22940004 // [0x00400148] addi $20, $20, 4                ; 183: addi     $s4, $s4, 4
+01284820 // [0x0040014c] add $9, $9, $8                  ; 184: add      $t1, $t1, $t0        # sum result
+22520001 // [0x00400150] addi $18, $18, 1                ; 186: addi     $s2, $s2, 1
+1653fffb // [0x00400154] bne $18, $19, -20 [L2-0x00400154]; 187: bne      $s2, $s3, L2         
+00000000 // [0x00400158] nop                             ; 188: sll      $zero, $zero, 0      # nop
+20080058 // [0x0040015c] addi $8, $0, 88                 ; 191: addi     $t0, $zero, 88       # expected result: change this depending on
+15090003 // [0x00400160] bne $8, $9, 12 [FAILED-0x00400160]; 194: bne      $t0, $t1, FAILED
+00000000 // [0x00400164] nop                             ; 195: sll      $zero, $zero, 0       
+08100060 // [0x00400168] j 0x00400180 [PASSED]           ; 196: j        PASSED
+00000000 // [0x0040016c] nop                             ; 197: sll      $zero, $zero, 0      
+3410dead // [0x00400170] ori $16, $0, -8531              ; 203: ori      $s0, $zero, 0xDEAD
+3411beef // [0x00400174] ori $17, $0, -16657             ; 204: ori      $s1, $zero, 0xBEEF
+20190001 // [0x00400178] addi $25, $0, 1                 ; 205: addi     $25, $zero, 1           # indicate end of test to fib_tb.v
+08100063 // [0x0040017c] j 0x0040018c [DONE]             ; 206: j        DONE
+3410600d // [0x00400180] ori $16, $0, 24589              ; 210: ori     $s0, $zero, 0x600D
+3411beef // [0x00400184] ori $17, $0, -16657             ; 211: ori     $s1, $zero, 0xBEEF
+20190001 // [0x00400188] addi $25, $0, 1                 ; 212: addi    $25, $zero, 1            # indicate end of test to fib_tb.v
